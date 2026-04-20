@@ -47,6 +47,11 @@ func (r *Redactor) ScrubError(err error) error {
 	return &redactedError{msg: r.Scrub(err.Error())}
 }
 
+// Len returns the number of secret values currently registered with the Redactor.
+func (r *Redactor) Len() int {
+	return len(r.secrets)
+}
+
 type redactedError struct{ msg string }
 
 func (e *redactedError) Error() string { return e.msg }
