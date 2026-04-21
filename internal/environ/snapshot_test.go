@@ -86,3 +86,18 @@ func TestKeys_ReturnsAllKeys(t *testing.T) {
 		t.Errorf("expected 2 keys, got %d", len(keys))
 	}
 }
+
+func TestLen_EmptySnapshot(t *testing.T) {
+	s := environ.FromMap(map[string]string{})
+	if s.Len() != 0 {
+		t.Errorf("expected Len()=0 for empty snapshot, got %d", s.Len())
+	}
+}
+
+func TestKeys_EmptySnapshot(t *testing.T) {
+	s := environ.FromMap(map[string]string{})
+	keys := s.Keys()
+	if len(keys) != 0 {
+		t.Errorf("expected no keys for empty snapshot, got %v", keys)
+	}
+}
