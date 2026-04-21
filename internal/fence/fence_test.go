@@ -94,3 +94,23 @@ func TestActive_MultipleKeys(t *testing.T) {
 		t.Fatalf("expected 2, got %d", f.Active())
 	}
 }
+
+func TestAcquire_SameKeyAfterRelease(t *testing.T) {
+	// Verify that a key can be re-acquired once its previous holder has released it.
+	f := fence.New()
+	release, err := f.Acquire(context.Background(), "reuse")
+	if err != nil {
+		t.Fatalf("first acquire failed: %v", err)
+	}
+	release()
+
+	release2, err2 := f.Acquire(context.Background(), "reuse")
+	if err2 != nil {
+		t.Fatalf("second acquire failed after release: %v", err2)
+	}
+	defer release2()
+
+	if f.Active() != 1 {
+		t.Fatalf("expected 1 active, got %d", f.Active())
+	}
+}
