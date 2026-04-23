@@ -91,6 +91,18 @@ func (m *Manager) Untrack(key string) {
 	m.watcher.Remove(key)
 }
 
+// TrackedKeys returns a snapshot of all currently tracked secret keys.
+func (m *Manager) TrackedKeys() []string {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	keys := make([]string, 0, len(m.pathMap))
+	for k := range m.pathMap {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
 // renewSecret fetches a fresh value for the secret identified by key.
 func (m *Manager) renewSecret(ctx context.Context, key string) error {
 	m.mu.Lock()
